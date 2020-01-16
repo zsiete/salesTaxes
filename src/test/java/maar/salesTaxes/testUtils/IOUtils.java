@@ -21,19 +21,9 @@ public final class IOUtils {
      * @throws IOException
      */
     public static String getString(byte[] inputBytes) throws IOException {
-        StringBuilder sb = new StringBuilder();
-
-        try (ByteArrayInputStream bais = new ByteArrayInputStream(inputBytes);
-             BufferedReader br = new BufferedReader(new InputStreamReader(bais));) {
-            String line = br.readLine();
-            while (line != null) {
-                sb.append(line);
-                sb.append("\n");
-                line = br.readLine();
-            }
+        try (ByteArrayInputStream bais = new ByteArrayInputStream(inputBytes)) {
+            return readInputStream(new ByteArrayInputStream(inputBytes));
         }
-
-        return sb.toString();
     }
 
     /**
@@ -50,5 +40,26 @@ public final class IOUtils {
             pw.flush();
             return new ByteArrayInputStream(baos.toByteArray());
         }
+    }
+
+    /**
+     * Reads an input stream to a string.
+     *
+     * @param inputStream The stream to read
+     * @return
+     */
+    public static String readInputStream(InputStream inputStream) throws IOException {
+        StringBuilder sb = new StringBuilder();
+
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
+            String line = br.readLine();
+            while (line != null) {
+                sb.append(line);
+                sb.append("\n");
+                line = br.readLine();
+            }
+        }
+
+        return sb.toString();
     }
 }
